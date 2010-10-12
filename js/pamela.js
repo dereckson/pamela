@@ -192,7 +192,7 @@ Pamela.prototype.resize = function() {
 
 Pamela.prototype.updateEntries = function() {
 	var self = this;
-	$.getJSON("macs.php", function(data) { 
+	$.getJSON("macs.tcl", function(data) { 
 		self.updateNodes(data);	
 	});
 	self.entriesTimer = setTimeout(function() { self.updateEntries(); }, 20000);
