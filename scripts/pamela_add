@@ -1,0 +1,66 @@
+#!/usr/bin/env tclsh8.5
+#
+# Adds a MAC address
+#
+# Usage: pamela_add <MAC> <name>
+#
+# If this code is copyright eligible,
+# (c) 2010 Sébastien Santoro aka Dereckson
+# All rights reserved. Released under BSD license.
+#
+
+#
+# Config
+#
+
+#The database
+set macs(db) /tmp/pamela.db
+
+#Path to libtclsqlite.so, if it's needed to manually load it
+set macs(libtclsqlite) "/usr/local/lib/sqlite/libtclsqlite.so"
+
+#Your userid
+set macs(userid) 1148
+#set macs(userid) [exec id -u]
+
+#
+# Helpers methods
+#
+
+#Determines wheter the specified string is a MAC address
+proc is_mac {mac} {
+    regexp -nocase {^[0-9A-F]{2}:[0-9A-F]{2}:[0-9A-F]{2}:[0-9A-F]{2}:[0-9A-F]{2}:[0-9A-F]{2}$} $mac
+}
+
+#
+# Procedural code
+#
+
+#Parses arguments
+if {$argc < 2} {
+    puts "Usage: pamela_add <MAC> <name>"
+    exit
+}
+
+set mac     [lindex $argv 0]
+set name    [lindex $argv 1]
+
+if ![is_mac $mac] {
+    puts "$mac isn't a valid MAC address."
+    exit
+}
+
+#Loads database
+if {[info exists macs(libtclsqlite)] && $macs(libtclsqlite) != ""} {
+    load $macs(libtclsqlite)
+} {
+    package require sqlite
+}
+sqlite db $macs(db)
+
+#Adds or updates entry
+set query "INSERT INTO knownmacs VALUES (1148, '$mac', '$name')"
+db eval $query
+
+#Cleanups
+db close
