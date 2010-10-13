@@ -27,7 +27,7 @@ set macs(userid) 1148
 # Helpers methods
 #
 
-#Determines wheter the specified string is a MAC address
+#Determines whether the specified string is a MAC address
 proc is_mac {mac} {
     regexp -nocase {^[0-9A-F]{2}:[0-9A-F]{2}:[0-9A-F]{2}:[0-9A-F]{2}:[0-9A-F]{2}:[0-9A-F]{2}$} $mac
 }
